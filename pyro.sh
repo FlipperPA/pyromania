@@ -1,3 +1,24 @@
+function pyro_help() {
+    echo "Pyromania venv Helper"
+    echo "---------------------"
+    echo "Pyromania creates and manages Python 3 venvs."
+    echo ""
+    echo "When creating a venv, it creates a folder named 'venv' in the current directory"
+    echo "and activates the venv. It upgrades pip and installs wheel. It also creates a"
+    echo "script which will automatically change to the directory where it was created"
+    echo "when activated, for easy access."
+    echo ""
+    echo "Examples:"
+    echo ""
+    echo "[venv] is the name of the Python virtual environment."
+    echo ""
+    echo "pyro --list             List pyromania managed venvs."
+    echo "pyro [venv]             Activates the venv; creates the venv if it doesn't exist."
+    echo "pyro [venv] --delete    Deletes the venv."
+    echo "pyro [venv] --packages  Changes to the site-packages folder of the venv."
+
+}
+
 function pyro_list() {
     echo -e $VENV_LIST
 }
@@ -52,6 +73,7 @@ function pyro_setup() {
     ACTIVE_NAME=""
     ACTIVE_DIR=""
     VENV_LIST=""
+    CREATE_NEW=1
 
     # Default to use venv for the venv directory name
     if [ -z "${VENV_DIR}" ]; then
@@ -75,8 +97,7 @@ function pyro_setup() {
         if [ "$1" = "$param_venv_name" ]; then
             ACTIVE_NAME=$1
             ACTIVE_DIR=$2
-        else
-            CREATE_NEW=1
+	    CREATE_NEW=0
         fi
     done < ~/.pyromania
 }
@@ -99,16 +120,30 @@ function pyro_cd_venv() {
 }
 
 function fn_pyro() {
-    pyro_setup $1
+    # If no parameter, show help, otherwise setup.
+    if [ $# -eq 0 ]; then
+	pyro_help
+	return 0
+    else
+	pyro_setup $1
+    fi
 
+    # Placeholder second parameter, if necessary.
+    if [ -z "$2" ]; then
+	ACTION="activate"
+    else
+	ACTION=$2
+    fi
+
+    # Action to perform based on parameters.
     if [ $1 = "--list" ]; then
         pyro_list
     elif [ "${CREATE_NEW}" = 1 ]; then
         pyro_create $1
     elif [[ "${ACTIVE_NAME}" != "" && "${ACTIVE_DIR}" != "" ]]; then
-        if [ $2 = "--delete" ]; then
+        if [ "${ACTION}" = "--delete" ]; then
             pyro_delete
-        elif [ $2 = "--packages" ]; then
+        elif [ "${ACTION}" = "--packages" ]; then
             pyro_cd_venv
         else
             pyro_activate
