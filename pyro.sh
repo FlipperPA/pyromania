@@ -54,7 +54,7 @@ function pyro_activate() {
         echo "Could not find the venv directory ${ACTIVE_DIR}/${ACTIVE_VENV}."
         echo "You may need to remove the entry from ~/.pyromania."
         echo "Here is a list of venvs:"
-        echo $VENV_LIST
+        echo -e $VENV_LIST
     fi
 }
 
@@ -76,7 +76,7 @@ function pyro_create() {
     else
 	echo "Creating a new venv in directory ${ACTIVE_DIR}/${ACTIVE_VENV}..."
 	# Create the venv
-	${VENV_PYTHON} -m venv --copies "${ACTIVE_VENV}"
+	${VENV_PYTHON} -m venv --copies --prompt ${ACTIVE_NAME} ${ACTIVE_VENV}
 	pyro_add_to_list
 	
 	# Create script to run before venv activation
@@ -100,7 +100,7 @@ function pyro_setup() {
     ACTIVE_DIR=""
     ACTIVE_VENV=""
     VENV_LIST=""
-    CREATE_NEW=1
+    ACTION="--create"
 
     # Default to use venv for the venv directory name
     if [ -z "${VENV_DIR}" ]; then
@@ -125,7 +125,7 @@ function pyro_setup() {
             ACTIVE_NAME=$1
             ACTIVE_DIR=$2
 	    ACTIVE_VENV=$3
-	    CREATE_NEW=0
+	    ACTION="--activate"
         fi
     done < ~/.pyromania
 }
@@ -135,9 +135,6 @@ function pyro_delete() {
         echo "Removing venv at: ${ACTIVE_DIR}/${ACTIVE_VENV}..."
         deactivate 2>/dev/null
         rm -rf "${ACTIVE_DIR}/${ACTIVE_VENV}"
-        unset ACTIVE_NAME
-        unset ACTIVE_DIR
-	unset ACTIVE_VENV
     else
         echo "Directory does not exist: ${ACTIVE_DIR}/${ACTIVE_VENV}"
 	echo "We'll remove it from the list of managed venvs since it doesn't exist."
@@ -148,18 +145,15 @@ function pyro_delete() {
     while read line; do
         set $line
 
-	echo "$1"
-	echo "${ACTIVE_NAME}"
         if [ "$1" != "${ACTIVE_NAME}" ]; then
 	    echo "$line" >> ~/.pyromania-new
         fi
     done < ~/.pyromania
-    echo "NEW"
-    echo ~/.pyromania-new
-    echo "OLD"
-    echo ~/.pyromania
-    echo "MOVING!"
     mv ~/.pyromania-new ~/.pyromania
+
+    unset ACTIVE_NAME
+    unset ACTIVE_DIR
+    unset ACTIVE_VENV
 }
 
 function pyro_cd_venv() {
@@ -176,18 +170,16 @@ function fn_pyro() {
     fi
 
     # Placeholder second parameter, if necessary.
-    if [ -z "$2" ]; then
-	ACTION="activate"
-    else
+    if [[ -n $2 ]]; then
 	ACTION=$2
     fi
 
     # Action to perform based on parameters.
     if [ $1 = "--list" ]; then
         pyro_list
-    elif [ "${CREATE_NEW}" = 1 ]; then
+    elif [ "${ACTION}" = "--create" ]; then
         pyro_create $1
-    elif [[ "${ACTIVE_NAME}" != "" && "${ACTIVE_DIR}" != "" ]]; then
+    elif [ "${ACTIVE_NAME}" != "" ] && [ "${ACTIVE_DIR}" != "" ]; then
         if [ "${ACTION}" = "--delete" ]; then
             pyro_delete
         elif [ "${ACTION}" = "--packages" ]; then
