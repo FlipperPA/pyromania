@@ -1,9 +1,10 @@
+curl -sS -o ~/.bashrc-pyro.sh https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh
+
 if grep -q "# Start Pyromania" ~/.bashrc; then
     echo "It appears Pyromania is already installed. Remove it from ~/.bashrc if"
-    echo "you need to reinstall."
+    echo "for a complete reinstall. Updating the Pyromania script to the latest"
+    echo "verison."
 else
-    curl -sS -o ~/.bashrc-pyro.sh https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh
-
     echo "" >> ~/.bashrc
     echo "# Start Pyromania upon login for venv management." >> ~/.bashrc
     echo "source ~/.bashrc-pyro.sh" >> ~/.bashrc
