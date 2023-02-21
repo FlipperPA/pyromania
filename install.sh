@@ -10,9 +10,7 @@ else
     echo "export VENV_PYTHON=`which python3`" >> ~/.bashrc
     echo "# End Pyromania configuration." >> ~/.bashrc
 
-    echo "Pyromania has been installed!"
-    echo ""
+    echo "Pyromania has been installed! Type 'pyro' for help getting started."
 
     source ~/.bashrc
-    pyro
 fi

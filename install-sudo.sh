@@ -10,9 +10,7 @@ else
     sudo echo "export VENV_PYTHON=`which python3`" >> /etc/bashrc
     sudo echo "# End Pyromania configuration." >> /etc/bashrc
 
-    echo "Pyromania has been installed!"
-    echo ""
+    echo "Pyromania has been installed! Type 'pyro' for help getting started."
 
     source /etc/bashrc
-    pyro
 fi
