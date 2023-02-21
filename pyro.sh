@@ -68,30 +68,30 @@ function pyro_create() {
     ACTIVE_VENV="${VENV_DIR}"
 
     if [ -f "${ACTIVE_DIR}/${ACTIVE_VENV}/bin/activate" ]; then
-	# If we find a venv that already exists, just add it to the list and activate.
-	echo "There appears to already be a 'venv' at '${ACTIVE_DIR}/${ACTIVE_VENV}'."
-	echo "It will be added to Pyromania's managed venv list."
-	pyro_add_to_list
-	pyro_activate
+    # If we find a venv that already exists, just add it to the list and activate.
+    echo "There appears to already be a 'venv' at '${ACTIVE_DIR}/${ACTIVE_VENV}'."
+    echo "It will be added to Pyromania's managed venv list."
+    pyro_add_to_list
+    pyro_activate
     else
-	echo "Creating a new venv in directory ${ACTIVE_DIR}/${ACTIVE_VENV}..."
-	# Create the venv
-	${VENV_PYTHON} -m venv --copies --prompt ${ACTIVE_NAME} ${ACTIVE_VENV}
-	pyro_add_to_list
-	
-	# Create script to run before venv activation
-	echo "# Commands to be run before venv activation" >> "${ACTIVE_VENV}/pre_activate.sh"
+    echo "Creating a new venv in directory ${ACTIVE_DIR}/${ACTIVE_VENV}..."
+    # Create the venv
+    ${VENV_PYTHON} -m venv --copies --prompt ${ACTIVE_NAME} ${ACTIVE_VENV}
+    pyro_add_to_list
+    
+    # Create script to run before venv activation
+    echo "# Commands to be run before venv activation" >> "${ACTIVE_VENV}/pre_activate.sh"
 
-	# Create script to run after venv activation, default to current directory
-	echo "# Commands to be run after venv activation" >> "${ACTIVE_VENV}/post_activate.sh"
-	echo "cd ${PWD}" >> "${ACTIVE_VENV}/post_activate.sh"
+    # Create script to run after venv activation, default to current directory
+    echo "# Commands to be run after venv activation" >> "${ACTIVE_VENV}/post_activate.sh"
+    echo "cd ${PWD}" >> "${ACTIVE_VENV}/post_activate.sh"
 
-	# Activate the new venv
-	pyro_activate
+    # Activate the new venv
+    pyro_activate
 
-	# Get the latest pip
-	echo "Upgrading to latest pip & wheel..."
-	pip install --quiet --upgrade pip wheel
+    # Get the latest pip
+    echo "Upgrading to latest pip & wheel..."
+    pip install --quiet --upgrade pip wheel
     fi
 }
 
@@ -124,8 +124,8 @@ function pyro_setup() {
         if [ "$1" = "$param_venv_name" ]; then
             ACTIVE_NAME=$1
             ACTIVE_DIR=$2
-	    ACTIVE_VENV=$3
-	    ACTION="--activate"
+        ACTIVE_VENV=$3
+        ACTION="--activate"
         fi
     done < ~/.pyromania
 }
@@ -137,7 +137,7 @@ function pyro_delete() {
         rm -rf "${ACTIVE_DIR}/${ACTIVE_VENV}"
     else
         echo "Directory does not exist: ${ACTIVE_DIR}/${ACTIVE_VENV}"
-	echo "We'll remove it from the list of managed venvs since it doesn't exist."
+    echo "We'll remove it from the list of managed venvs since it doesn't exist."
     fi
 
     local IFS=:
@@ -146,7 +146,7 @@ function pyro_delete() {
         set $line
 
         if [ "$1" != "${ACTIVE_NAME}" ]; then
-	    echo "$line" >> ~/.pyromania-new
+        echo "$line" >> ~/.pyromania-new
         fi
     done < ~/.pyromania
     mv ~/.pyromania-new ~/.pyromania
@@ -163,15 +163,15 @@ function pyro_cd_venv() {
 function fn_pyro() {
     # If no parameter, show help, otherwise setup.
     if [ $# -eq 0 ]; then
-	pyro_help
-	return 0
+        pyro_help
+        return 0
     else
-	pyro_setup $1
+        pyro_setup $1
     fi
 
     # Placeholder second parameter, if necessary.
     if [[ -n $2 ]]; then
-	ACTION=$2
+        ACTION=$2
     fi
 
     # Action to perform based on parameters.
