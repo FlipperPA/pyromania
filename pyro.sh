@@ -26,7 +26,7 @@ function pyro_help() {
     echo ""
     echo "VENV_PYTHON=/usr/bin/python3.10 VENV_DIR=my_dir pyro wrds"
     echo ""
-    echo "The example uses '/usr/bin/python3.10' to create the venv in directory 'my_venv'"
+    echo "The example uses '/usr/bin/python3.10' to create the venv in directory 'my_dir'"
     echo "instead of using the default environment variable."
     echo ""
     echo "For more information, see: https://github.com/FlipperPA/pyromania"
