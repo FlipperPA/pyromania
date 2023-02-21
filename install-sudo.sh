@@ -13,5 +13,6 @@ else
     echo "Pyromania has been installed!"
     echo ""
 
+    source /etc/bashrc
     pyro
 fi
