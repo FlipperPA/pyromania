@@ -1,13 +1,21 @@
 # Pyromania
 
-Pyromania helps you manage Python 3 venvs. It was inspired by `virtualenvwrapper`. By default, Pyromania will create a venv named `venv` in the current directory
+Pyromania helps you manage Python 3 venvs. It was inspired by `virtualenvwrapper`. By default, Pyromania will create a venv named `venv` in the current directory.
 
-## Installation
+## System Wide Installation
 
-We recommend using a `pip install` with sudo, so it is available system wide. This will install a file called `bashrc-pyro` into `/etc`, and append a line to `/etc/bashrc` to invoke it.
+To install the `pyro` command for all users on your system with sudo escalation:
 
+```bash
+curl -sS https://raw.githubusercontent.com/FlipperPA/pyromania/main/install-sudo.sh | sh
 ```
-sudo pip install pyromania
+
+## User Installation
+
+To install the `pyro` command for the current user only:
+
+```bash
+curl -sS https://raw.githubusercontent.com/FlipperPA/pyromania/main/install.sh | sh
 ```
 
 ## Settings
