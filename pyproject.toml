@@ -28,7 +28,7 @@ classifiers = [
 dynamic = ["version"]
 
 [project.urls]
-"Homepage" = "https://github.com/FlipperPA/pyromania/""
+"Homepage" = "https://github.com/FlipperPA/pyromania/"
 "Repository" = "https://github.com/FlipperPA/pyromania/"
 "Documentation" = "https://github.com/FlipperPA/pyromania/"
 "Bug Tracker" = "https://github.com/FlipperPA/pyromania/issues"
