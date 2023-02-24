@@ -3,24 +3,32 @@ function pyro_help() {
     echo "---------------------"
     echo "Pyromania creates and manages Python 3 venvs."
     echo ""
-    echo "When creating a venv, it creates a folder named 'venv' in the current directory"
-    echo "and activates the venv. It upgrades pip and installs wheel. It also creates a"
+    echo "Pyromania uses Python to create a venv folder in the current directory and"
+    echo "activates the venv. It upgrades pip and installs wheel. It also creates a"
     echo "script which will automatically change to the directory where it was created"
     echo "when activated, for easy access."
     echo ""
+    echo "Usage, where [venv] is the name of the Python virtual environment:"
+    echo "pyro [venv] [options]"
+    echo ""
+    echo "Options:"
+    echo "--help, -h"
+    echo "--delete, -d"
+    echo "--packages, -p"
+    echo ""
     echo "Examples:"
-    echo ""
-    echo "[venv] is the name of the Python virtual environment."
-    echo ""
-    echo "pyro --list             List pyromania managed venvs."
-    echo "pyro [venv]             Activates the venv; creates the venv if it doesn't exist."
-    echo "pyro [venv] --delete    Deletes the venv."
-    echo "pyro [venv] --packages  Changes to the site-packages folder of the venv."
+    echo "pyro                  List Pyromania managed venvs."
+    echo "pyro --help           Display this help menu."
+    echo "pyro [venv]           Activates the venv; creates the venv if it does not exist."
+    echo "pyro [venv] --delete  Deletes the venv."
+    echo "pyro [venv] -p        Changes to the site-packages folder of the venv."
     echo ""
     echo "Settings via Environment Variables"
     echo "----------------------------------"
-    echo "VENV_PYTHON (default: python3) The Python binary to create the venv."
-    echo "VENV_DIR (default: venv) Directory name of the venv to create in the directory."
+    echo "VENV_PYTHON (default: 'python3') The Python binary to create the venv."
+    echo "    Currently: '$VENV_PYTHON'"
+    echo "VENV_DIR (default: 'venv') Directory name of the venv to create in the directory."
+    echo "    Currently: '$VENV_DIR'"
     echo ""
     echo "These can be overridden at the command line. Consider this example:"
     echo ""
@@ -137,7 +145,7 @@ function pyro_delete() {
         rm -rf "${ACTIVE_DIR}/${ACTIVE_VENV}"
     else
         echo "Directory does not exist: ${ACTIVE_DIR}/${ACTIVE_VENV}"
-    echo "We'll remove it from the list of managed venvs since it doesn't exist."
+    echo "Removing name from the list of managed venvs since it does not exist."
     fi
 
     local IFS=:
@@ -157,13 +165,15 @@ function pyro_delete() {
 }
 
 function pyro_cd_venv() {
-    cd "${ACTIVE_DIR}/${ACTIVE_NAME}/"
+    pyro_activate
+    PYTHON_VERSION=`ls $ACTIVE_DIR/$ACTIVE_VENV/lib/`
+    cd "$ACTIVE_DIR/$ACTIVE_VENV/lib/$PYTHON_VERSION/site-packages/"
 }
 
 function fn_pyro() {
     # If no parameter, show help, otherwise setup.
     if [ $# -eq 0 ]; then
-        pyro_help
+        pyro_list
         return 0
     else
         pyro_setup $1
@@ -175,14 +185,14 @@ function fn_pyro() {
     fi
 
     # Action to perform based on parameters.
-    if [ $1 = "--list" ]; then
-        pyro_list
+    if [ $1 = "--help" ]; then
+        pyro_help
     elif [ "${ACTION}" = "--create" ]; then
         pyro_create $1
     elif [ "${ACTIVE_NAME}" != "" ] && [ "${ACTIVE_DIR}" != "" ]; then
-        if [ "${ACTION}" = "--delete" ]; then
+        if [ "${ACTION}" = "--delete" ] || [ "${ACTION}" = "-d" ]; then
             pyro_delete
-        elif [ "${ACTION}" = "--packages" ]; then
+        elif [ "${ACTION}" = "--packages" ] || [ "${ACTION}" = "-p" ]; then
             pyro_cd_venv
         else
             pyro_activate
