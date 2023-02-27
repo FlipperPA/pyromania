@@ -13,12 +13,11 @@ function pyro_help() {
     echo ""
     echo "Options:"
     echo "--help, -h"
-    echo "--delete, -d"
-    echo "--packages, -p"
+    echo "[venv] --delete, -d"
+    echo "[venv] --packages, -p"
     echo ""
     echo "Examples:"
     echo "pyro                  List Pyromania managed venvs."
-    echo "pyro --help           Display this help menu."
     echo "pyro [venv]           Activates the venv; creates the venv if it does not exist."
     echo "pyro [venv] --delete  Deletes the venv."
     echo "pyro [venv] -p        Changes to the site-packages folder of the venv."
@@ -99,8 +98,28 @@ function pyro_create() {
 
     # Get the latest pip
     echo "Upgrading to latest pip & wheel..."
-    pip install --quiet --upgrade pip wheel
+    python -m pip install --quiet --upgrade pip wheel
     fi
+}
+
+function pyro_setup_list() {
+    VENV_LIST=""
+    param_venv_name=$1
+
+    local IFS=:
+    # Ensure that our metadata file exists
+    touch ~/.pyromania
+    while read line; do
+        set $line
+        VENV_LIST="$VENV_LIST($1): $2\n"
+
+        if [ "$1" = "$param_venv_name" ]; then
+            ACTIVE_NAME=$1
+            ACTIVE_DIR=$2
+        ACTIVE_VENV=$3
+        ACTION="--activate"
+        fi
+    done < ~/.pyromania
 }
 
 function pyro_setup() {
@@ -120,22 +139,7 @@ function pyro_setup() {
         VENV_PYTHON="python3"
     fi
 
-    param_venv_name=$1
-
-    local IFS=:
-    # Ensure that our metadata file exists
-    touch ~/.pyromania
-    while read line; do
-        set $line
-        VENV_LIST="$VENV_LIST($1): $2\n"
-
-        if [ "$1" = "$param_venv_name" ]; then
-            ACTIVE_NAME=$1
-            ACTIVE_DIR=$2
-        ACTIVE_VENV=$3
-        ACTION="--activate"
-        fi
-    done < ~/.pyromania
+    pyro_setup_list $1
 }
 
 function pyro_delete() {
@@ -173,7 +177,9 @@ function pyro_cd_venv() {
 function fn_pyro() {
     # If no parameter, show help, otherwise setup.
     if [ $# -eq 0 ]; then
+        pyro_setup_list
         pyro_list
+        echo "Type 'pyro --help' for help and examples."
         return 0
     else
         pyro_setup $1
@@ -184,15 +190,20 @@ function fn_pyro() {
         ACTION=$2
     fi
 
+    echo "*****************"
+    echo "${ACTIVE_NAME} ${ACTIVE_DIR}"
     # Action to perform based on parameters.
     if [ $1 = "--help" ]; then
         pyro_help
     elif [ "${ACTION}" = "--create" ]; then
         pyro_create $1
     elif [ "${ACTIVE_NAME}" != "" ] && [ "${ACTIVE_DIR}" != "" ]; then
+        echo "IN ACTIVE DOING ACTION..."
         if [ "${ACTION}" = "--delete" ] || [ "${ACTION}" = "-d" ]; then
+            echo "DELETING..."
             pyro_delete
         elif [ "${ACTION}" = "--packages" ] || [ "${ACTION}" = "-p" ]; then
+            echo "PACKAGES..."
             pyro_cd_venv
         else
             pyro_activate

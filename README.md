@@ -25,7 +25,7 @@ curl -sS https://raw.githubusercontent.com/FlipperPA/pyromania/main/install.sh |
 
 ## Usage
 
-* `pyro --list`: Lists the venvs currently managed by pyromania.
+* `pyro`: Lists the venvs currently managed by pyromania.
 * `pyro my_venv`: Activate a venv called `my_venv`, or creates it if it doesn't exist.
 * `pyro my_venv --delete`: Deletes a venv called `my_venv`.
 * `pyro my_venv --venv`: Changes to to the venv's directory.
@@ -37,7 +37,7 @@ curl -sS https://raw.githubusercontent.com/FlipperPA/pyromania/main/install.sh |
 
 ## Pre and Post Activation Hooks
 
-Your `venv` will contain to files which can be modified for pre and post activation options:
+Pyromania will create two hook files in your `venv` which can be modified for pre and post activation actions:
 
 * `venv/pre_activate.sh`: script is run before the `venv` is activated.
 * `venv/post_activate.sh`: script is run after the `venv` is activated.
