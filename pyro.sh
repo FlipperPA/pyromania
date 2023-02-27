@@ -116,8 +116,8 @@ function pyro_setup_list() {
         if [ "$1" = "$param_venv_name" ]; then
             ACTIVE_NAME=$1
             ACTIVE_DIR=$2
-        ACTIVE_VENV=$3
-        ACTION="--activate"
+            ACTIVE_VENV=$3
+            ACTION="--activate"
         fi
     done < ~/.pyromania
 }
@@ -190,20 +190,15 @@ function fn_pyro() {
         ACTION=$2
     fi
 
-    echo "*****************"
-    echo "${ACTIVE_NAME} ${ACTIVE_DIR}"
     # Action to perform based on parameters.
     if [ $1 = "--help" ]; then
         pyro_help
     elif [ "${ACTION}" = "--create" ]; then
         pyro_create $1
     elif [ "${ACTIVE_NAME}" != "" ] && [ "${ACTIVE_DIR}" != "" ]; then
-        echo "IN ACTIVE DOING ACTION..."
         if [ "${ACTION}" = "--delete" ] || [ "${ACTION}" = "-d" ]; then
-            echo "DELETING..."
             pyro_delete
         elif [ "${ACTION}" = "--packages" ] || [ "${ACTION}" = "-p" ]; then
-            echo "PACKAGES..."
             pyro_cd_venv
         else
             pyro_activate
