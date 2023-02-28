@@ -28,7 +28,7 @@ curl -sS https://raw.githubusercontent.com/FlipperPA/pyromania/main/install.sh |
 * `pyro`: Lists the venvs currently managed by pyromania.
 * `pyro my_venv`: Activate a venv called `my_venv`, or creates it if it doesn't exist.
 * `pyro my_venv --delete`: Deletes a venv called `my_venv`.
-* `pyro my_venv --venv`: Changes to to the venv's directory.
+* `pyro my_venv --packages`: Changes to to the venv's site-packages directory.
 
 ## Settings
 
