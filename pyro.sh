@@ -154,6 +154,7 @@ function pyro_delete() {
 
     local IFS=:
 
+    touch ~/.pyromania-new
     while read line; do
         set $line
 
@@ -162,10 +163,8 @@ function pyro_delete() {
         fi
     done < ~/.pyromania
 
-    # Move the metadata file without the deleted entry, or delete if empty.
-    if ! mv ~/.pyromania-new ~/.pyromania ; then
-	rm ~/.pyromania
-    fi
+    # Replace the metadata file without the deleted entry.
+    mv ~/.pyromania-new ~/.pyromania
 
     unset ACTIVE_NAME
     unset ACTIVE_DIR
