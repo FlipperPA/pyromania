@@ -7,13 +7,21 @@ if grep -q "# Start Pyromania" /etc/bashrc; then
 else
     sudo curl -sS -o /etc/bashrc-pyro.sh https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh
 
-    sudo echo "" >> /etc/bashrc
-    sudo echo "# Start Pyromania upon login for venv management." >> /etc/bashrc
-    sudo echo "source /etc/bashrc-pyro.sh" >> /etc/bashrc
-    sudo echo "export VENV_PYTHON=`which python3`" >> /etc/bashrc
-    sudo echo "# End Pyromania configuration." >> /etc/bashrc
-
-    echo "Pyromania has been installed! Type 'pyro' for help getting started."
+    PYTHON3=sudo which python3
+    
+    sudo cat <<EOT >> /etc/bashrc
+# Start Pyromania upon login for venv management.
+source /etc/bashrc-pyro.sh
+export VENV_PYTHON=$PYTHON#
+# End Pyromania configuration.
+EOT
+    if ! which python3asdf ; then
+        echo "WARNING!"
+        echo "'python3' could not be found in the system path. You should edit /etc/bashrc"
+        echo "and set 'VENV_PYTHON' to the path of your preferred Python 3 binary."
+	echo ""
+    fi
+    echo "Pyromania has been installed! Type 'pyro --help' for help getting started."
 
     source /etc/bashrc
 fi
