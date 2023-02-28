@@ -161,7 +161,11 @@ function pyro_delete() {
         echo "$line" >> ~/.pyromania-new
         fi
     done < ~/.pyromania
-    mv ~/.pyromania-new ~/.pyromania
+
+    # Move the metadata file without the deleted entry, or delete if empty.
+    if ! mv ~/.pyromania-new ~/.pyromania ; then
+	rm ~/.pyromania
+    fi
 
     unset ACTIVE_NAME
     unset ACTIVE_DIR
