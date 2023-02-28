@@ -2,8 +2,9 @@ if grep -q "# Start Pyromania" /etc/bashrc; then
     echo "It appears Pyromania is already installed for all users. Remove it from"
     echo "/etc/bashrc if you need to reinstall."
     echo ""
-    echo "You can update to the latest script version with this command:"
+    echo "You can update to the latest script version with these commands:"
     echo "sudo curl -sS -o /etc/bashrc-pyro.sh https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh"
+    echo "source /etc/bashrc"
 else
     sudo curl -sS -o /etc/bashrc-pyro.sh https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh
 
