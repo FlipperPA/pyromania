@@ -7,6 +7,7 @@ if grep -q "# Start Pyromania" /etc/bashrc; then
     echo "source /etc/bashrc"
 else
     sudo curl -sS -o /etc/bashrc-pyro.sh https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh
+    sudo chmod 644 /etc/bashrc-pyro.sh
 
     echo "Looking for python3 in the path..."
     PYTHON3="$(sudo which python3)"
