@@ -1,0 +1,27 @@
+---
+- name: Download Pyromania bash script
+  become: yes
+  get_url:
+    url: https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh
+    dest: /etc/bashrc-pyro.sh
+    mode: 0644
+    group: root
+    owner: root
+
+- name: Get location of default Python 3
+  shell: 'which python'
+  register: python3_path
+
+- name: Print the Python 3 path for the administrator
+  ansible.builtin.debug:
+    msg: VENV_PYTHON for Pyromania is being set to '{{ python3_path.stdout }}'. You can change this by editing the value in '/etc/bashrc'.
+  when: python3_path is defined
+
+- name: Add Pyromania invocation to /etc/bashrc
+  ansible.builtin.blockinfile:
+    path: /etc/bashrc
+    block: |
+      # Start Pyromania upon login for venv management.
+      source /etc/bashrc-pyro.sh
+      export VENV_PYTHON={{ python3_path.stdout }}
+      # End Pyromania configuration.
