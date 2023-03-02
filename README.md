@@ -15,6 +15,8 @@ To install the `pyro` command for all users on your system with sudo escalation:
 curl -sS https://raw.githubusercontent.com/FlipperPA/pyromania/main/install-sudo.sh | sh
 ```
 
+[An Ansible role for installation is also available.](https://github.com/FlipperPA/pyromania/tree/main/ansible-role-install)
+
 ## User Installation
 
 To install the `pyro` command for the current user only:
