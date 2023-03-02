@@ -70,35 +70,46 @@ function pyro_add_to_list() {
 }
 
 function pyro_create() {
+    # venv names can't start with hyphens with pyro
+    if [[ $1 = -* ]]; then
+        "ERROR: venv names cannot being with a hyphen ('$1'). Aborting."
+        exit 0
+    fi
+
     ACTIVE_NAME=$1
     ACTIVE_DIR=`pwd`
     ACTIVE_VENV="${VENV_DIR}"
 
     if [ -f "${ACTIVE_DIR}/${ACTIVE_VENV}/bin/activate" ]; then
-    # If we find a venv that already exists, just add it to the list and activate.
-    echo "There appears to already be a 'venv' at '${ACTIVE_DIR}/${ACTIVE_VENV}'."
-    echo "It will be added to Pyromania's managed venv list."
-    pyro_add_to_list
-    pyro_activate
+        # If we find a venv that already exists, just add it to the list and activate.
+        echo "There appears to already be a 'venv' at '${ACTIVE_DIR}/${ACTIVE_VENV}'."
+        if [ $2 = "--add" ]; then
+            echo "It will be added to Pyromania's managed venv list."
+            pyro_add_to_list
+            pyro_activate
+        else
+            echo "To create an entry for it with Pyromania, you can use the command:"
+            echo "pyro $ACTIVE_NAME --add"
+        fi
     else
-    echo "Creating a new venv in directory ${ACTIVE_DIR}/${ACTIVE_VENV}..."
-    # Create the venv
-    ${VENV_PYTHON} -m venv --copies --prompt ${ACTIVE_NAME} ${ACTIVE_VENV}
-    pyro_add_to_list
-    
-    # Create script to run before venv activation
-    echo "# Commands to be run before venv activation" >> "${ACTIVE_VENV}/pre_activate.sh"
+        echo "Creating a new venv in directory ${ACTIVE_DIR}/${ACTIVE_VENV}..."
+        # Create the venv
+        ${VENV_PYTHON} -m venv --copies --prompt ${ACTIVE_NAME} ${ACTIVE_VENV}
+        pyro_add_to_list
+        
+        # Create script to run before venv activation
+        echo "# Commands to be run before venv activation" >> "${ACTIVE_VENV}/pre_activate.sh"
 
-    # Create script to run after venv activation, default to current directory
-    echo "# Commands to be run after venv activation" >> "${ACTIVE_VENV}/post_activate.sh"
-    echo "cd ${PWD}" >> "${ACTIVE_VENV}/post_activate.sh"
+        # Create script to run after venv activation, default to current directory
+        echo "# Commands to be run after venv activation" >> "${ACTIVE_VENV}/post_activate.sh"
+        echo "cd ${PWD}" >> "${ACTIVE_VENV}/post_activate.sh"
 
-    # Activate the new venv
-    pyro_activate
+        # Activate the new venv
+        pyro_activate
 
-    # Get the latest pip
-    echo "Upgrading to latest pip & wheel..."
-    python -m pip install --quiet --upgrade pip wheel
+        # Get the latest pip
+        echo "Upgrading to latest pip & wheel..."
+        python -m pip install --quiet --upgrade pip wheel
     fi
 }
 
@@ -129,7 +140,7 @@ function pyro_setup() {
     VENV_LIST=""
     ACTION="--create"
 
-    # Default to use venv for the venv directory name
+    # Default to use venv for fithe venv directory name
     if [ -z "${VENV_DIR}" ]; then
         VENV_DIR="venv"
     fi
@@ -149,7 +160,7 @@ function pyro_delete() {
         rm -rf "${ACTIVE_DIR}/${ACTIVE_VENV}"
     else
         echo "Directory does not exist: ${ACTIVE_DIR}/${ACTIVE_VENV}"
-    echo "Removing name from the list of managed venvs since it does not exist."
+        echo "Removing name from the list of managed venvs since it does not exist."
     fi
 
     local IFS=:
@@ -158,9 +169,12 @@ function pyro_delete() {
         set $line
 
         if [ "$1" != "${ACTIVE_NAME}" ]; then
-        echo "$line" >> ~/.pyromania-new
+            echo "$line" >> ~/.pyromania-new
         fi
     done < ~/.pyromania
+
+    # Replace the metadata file without the deleted entry.
+    touch ~/.pyromania-new
     mv ~/.pyromania-new ~/.pyromania
 
     unset ACTIVE_NAME
@@ -193,8 +207,8 @@ function fn_pyro() {
     # Action to perform based on parameters.
     if [ $1 = "--help" ]; then
         pyro_help
-    elif [ "${ACTION}" = "--create" ]; then
-        pyro_create $1
+    elif [ "${ACTION}" = "--create" ] || [ "${ACTION}" = "--add" ]; then
+        pyro_create $1 $ACTION
     elif [ "${ACTIVE_NAME}" != "" ] && [ "${ACTIVE_DIR}" != "" ]; then
         if [ "${ACTION}" = "--delete" ] || [ "${ACTION}" = "-d" ]; then
             pyro_delete
