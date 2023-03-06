@@ -73,12 +73,23 @@ function pyro_create() {
     # venv names can't start with hyphens with pyro
     if [[ $1 = -* ]]; then
         "ERROR: venv names cannot being with a hyphen ('$1'). Aborting."
-        exit 0
+        return
     fi
 
     ACTIVE_NAME=$1
     ACTIVE_DIR=`pwd`
     ACTIVE_VENV="${VENV_DIR}"
+
+    if [ $2 = "--auto-create" ]; then
+        echo "There is no venv called '${ACTIVE_NAME}'. Do you want to create it? (y/N) "
+        read yes_no
+        yes_no=${yes_no:0:1}
+        yes_no=${yes_no^^}
+        if [ "$yes_no" != "Y" ]; then
+            echo "Not creating the new venv '${ACTIVE_NAME}'."
+            return
+        fi
+    fi
 
     if [ -f "${ACTIVE_DIR}/${ACTIVE_VENV}/bin/activate" ]; then
         # If we find a venv that already exists, just add it to the list and activate.
@@ -138,9 +149,9 @@ function pyro_setup() {
     ACTIVE_DIR=""
     ACTIVE_VENV=""
     VENV_LIST=""
-    ACTION="--create"
+    ACTION="--auto-create"
 
-    # Default to use venv for fithe venv directory name
+    # Default to use venv for the venv directory name
     if [ -z "${VENV_DIR}" ]; then
         VENV_DIR="venv"
     fi
@@ -207,7 +218,7 @@ function fn_pyro() {
     # Action to perform based on parameters.
     if [ $1 = "--help" ]; then
         pyro_help
-    elif [ "${ACTION}" = "--create" ] || [ "${ACTION}" = "--add" ]; then
+    elif [ "${ACTION}" = "--create" ] || [ "${ACTION}" = "--auto-create" ] || [ "${ACTION}" = "--add" ]; then
         pyro_create $1 $ACTION
     elif [ "${ACTIVE_NAME}" != "" ] && [ "${ACTIVE_DIR}" != "" ]; then
         if [ "${ACTION}" = "--delete" ] || [ "${ACTION}" = "-d" ]; then
