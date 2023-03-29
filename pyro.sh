@@ -133,7 +133,15 @@ function pyro_setup_list() {
     touch ~/.pyromania
     while read line; do
         set $line
-        VENV_LIST="$VENV_LIST($1): $2\n"
+        if [ $ACTION = "--autocomplete-list" ]; then
+            if [ "$VENV_LIST" = "" ]; then
+                VENV_LIST=$1
+            else
+                VENV_LIST="$VENV_LIST $1"
+            fi
+        else
+            VENV_LIST="$VENV_LIST($1): $2\n"
+        fi
 
         if [ "$1" = "$param_venv_name" ]; then
             ACTIVE_NAME=$1
@@ -205,6 +213,11 @@ function fn_pyro() {
         pyro_setup_list
         pyro_list
         echo "Type 'pyro --help' for help and examples."
+        return 0
+    elif [ $1 = "--autocomplete-list" ]; then
+        ACTION="--autocomplete-list"
+        pyro_setup_list
+        pyro_list
         return 0
     else
         pyro_setup $1
