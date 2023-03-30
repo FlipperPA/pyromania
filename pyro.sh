@@ -13,12 +13,14 @@ function pyro_help() {
     echo ""
     echo "Options:"
     echo "--help, -h"
+    echo "[venv] --create, -c"
     echo "[venv] --delete, -d"
     echo "[venv] --packages, -p"
     echo ""
     echo "Examples:"
     echo "pyro                  List Pyromania managed venvs."
-    echo "pyro [venv]           Activates the venv; creates the venv if it does not exist."
+    echo "pyro [venv]           Activates the venv; prompts to create the venv if it does not exist."
+    echo "pyro [venv] --create  Creates the venv without prompting if it does not exist."
     echo "pyro [venv] --delete  Deletes the venv."
     echo "pyro [venv] -p        Changes to the site-packages folder of the venv."
     echo ""
@@ -229,9 +231,9 @@ function fn_pyro() {
     fi
 
     # Action to perform based on parameters.
-    if [ $1 = "--help" ]; then
+    if [ $1 = "--help" ] || [ $1 = "-h" ]; then
         pyro_help
-    elif [ "${ACTION}" = "--create" ] || [ "${ACTION}" = "--auto-create" ] || [ "${ACTION}" = "--add" ]; then
+    elif [ "${ACTION}" = "--create" ] || [ "${ACTION}" = "-c" ] || [ "${ACTION}" = "--auto-create" ] || [ "${ACTION}" = "--add" ]; then
         pyro_create $1 $ACTION
     elif [ "${ACTIVE_NAME}" != "" ] && [ "${ACTIVE_DIR}" != "" ]; then
         if [ "${ACTION}" = "--delete" ] || [ "${ACTION}" = "-d" ]; then

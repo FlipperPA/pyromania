@@ -27,10 +27,20 @@ curl -sS https://raw.githubusercontent.com/FlipperPA/pyromania/main/install.sh |
 
 ## Usage
 
+**Options:**
+
+* `--help`, `-h`: Display the help menu.
+* `--delete`, `-d`: Delete the venv.
+* `--create`, `-c`: Create the venv without prompting.
+* `--packages` `-p`: Change to the venv's site-packages directory.
+
+**Examples:**
+
 * `pyro`: Lists the venvs currently managed by pyromania.
-* `pyro my_venv`: Activate a venv called `my_venv`, or creates it if it doesn't exist.
+* `pyro my_venv`: Activate a venv called `my_venv`, or prompts to create it if it doesn't exist.
+* `pyro my_venv -c`: Creates a venv called `my_venv` without prompting.
 * `pyro my_venv --delete`: Deletes a venv called `my_venv`.
-* `pyro my_venv --packages`: Changes to to the venv's site-packages directory.
+* `pyro my_venv -p`: Change to to the venv's site-packages directory.
 
 ## Settings
 
