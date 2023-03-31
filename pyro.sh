@@ -246,3 +246,26 @@ function fn_pyro() {
     fi
 }
 alias pyro=fn_pyro
+
+pyro_autocomplete() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    if [ $COMP_CWORD -eq 1 ]; then
+        # First argument can be a venv name or help
+        opts=`pyro --autocomplete-list`
+        opts="--help -h ${opts}"
+    elif [ $COMP_CWORD -eq 2 ]; then
+        # Second argument can only be an action
+        opts="--create -c --delete -d --packages -p" 
+    fi
+
+    if [[ ${cur} == * ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+}
+complete -F pyro_autocomplete pyro
