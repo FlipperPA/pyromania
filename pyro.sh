@@ -131,11 +131,13 @@ function pyro_setup_list() {
     param_venv_name=$1
 
     local IFS=:
+    # Set ACTION to --list if null
+    ACTION=${ACTION:="--list"}
     # Ensure that our metadata file exists
     touch ~/.pyromania
     while read line; do
         set $line
-        if [ $ACTION = "--autocomplete-list" ]; then
+        if [ $ACTION == "--autocomplete-list" ]; then
             if [ "$VENV_LIST" = "" ]; then
                 VENV_LIST=$1
             else
@@ -263,7 +265,7 @@ pyro_autocomplete()
         opts="--create -c --delete -d --packages -p" 
     fi
 
-    if [[ ${cur} == * ]] ; then
+    if [[ ${cur} == * ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
     fi
