@@ -8,11 +8,18 @@ TEST_VENV_DIR="$DIR/$TEST_VENV_NAME"
 echo "Starting tests with test venv '$TEST_VENV_NAME'..."
 
 # Test venv creation
-VENV_DIR=$TEST_VENV_DIR pyro $TEST_VENV_NAME > /dev/null
+VENV_DIR=$TEST_VENV_DIR pyro $TEST_VENV_NAME -c > /dev/null
 if [ -d "$TEST_VENV_DIR" ]; then
     echo "Testing venv creation... passed."
 else
     echo "Testing venv creation FAILED."
+fi
+
+# Test default post activation hook
+if grep -q "# Commands to be run after" "${TEST_VENV_DIR}/post_activate.sh"; then
+    echo "Testing post activation default script... passed."
+else
+    echo "Testing post activation default script FAILED."
 fi
 
 # Test venv deletion
