@@ -249,6 +249,7 @@ function fn_pyro() {
 }
 alias pyro=fn_pyro
 
+# complete is a bash built-in, so it should always be available.
 pyro_autocomplete() 
 {
     local cur prev opts
