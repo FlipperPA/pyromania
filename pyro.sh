@@ -85,8 +85,11 @@ function pyro_create() {
     if [ $2 = "--auto-create" ]; then
         echo "There is no venv called '${ACTIVE_NAME}'. Do you want to create it? (y/N) "
         read yes_no
+
+	# Uppercase the first character of the input
         yes_no=${yes_no:0:1}
-        yes_no=${yes_no^^}
+        yes_no=`echo $yes_no | tr a-z A-Z`
+
         if [ "$yes_no" != "Y" ]; then
             echo "Not creating the new venv '${ACTIVE_NAME}'."
             return
