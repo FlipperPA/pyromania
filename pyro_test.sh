@@ -1,3 +1,4 @@
+#!/bin/bash
 # Set up the tests by moving to the directory and creating a dummy venv name
 DIR="$( dirname -- "${BASH_SOURCE[0]}"; )";
 cd $DIR
