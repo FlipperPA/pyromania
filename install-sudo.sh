@@ -1,3 +1,4 @@
+#!/bin/bash
 if grep -q "# Start Pyromania" /etc/bashrc; then
     echo "It appears Pyromania is already installed for all users. Remove it from"
     echo "/etc/bashrc if you need to reinstall."
