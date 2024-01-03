@@ -1,3 +1,4 @@
+#!/bin/bash
 curl -sS -o ~/.bashrc-pyro.sh https://raw.githubusercontent.com/FlipperPA/pyromania/main/pyro.sh
 
 if grep -q "# Start Pyromania" ~/.bashrc; then
