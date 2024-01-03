@@ -1,3 +1,4 @@
+#!/bin/bash
 function pyro_help() {
     echo "Pyromania venv Helper"
     echo "---------------------"
