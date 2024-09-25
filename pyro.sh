@@ -70,6 +70,8 @@ function pyro_activate() {
 
 function pyro_add_to_list() {
     echo "${ACTIVE_NAME}:${ACTIVE_DIR}:${ACTIVE_VENV}" >> ~/.pyromania
+    cat ~/.pyromania | sort >> ~/.pyromania_sorted
+    mv ~/.pyromania_sorted ~/.pyromania
 }
 
 function pyro_create() {
